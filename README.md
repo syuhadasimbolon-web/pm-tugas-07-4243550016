@@ -1,17 +1,57 @@
-# pm_tugas_07_4243550016
+# Planner Tugas Kuliah
 
-A new Flutter project.
+**Pemrograman Mobile – Pertemuan 7**
 
-## Getting Started
+**Nama:** Syuhada Simbolon  
+**NIM:** 4243550016  
+**Universitas:** Universitas Negeri Medan
 
-This project is a starting point for a Flutter application.
+## Deskripsi Aplikasi
 
-A few resources to get you started if this is your first Flutter project:
+Planner Tugas Kuliah merupakan aplikasi Flutter untuk membantu mahasiswa mencatat dan memantau tugas perkuliahan. Pengguna dapat menambahkan tugas dengan informasi judul, mata kuliah, dan tenggat waktu. Aplikasi menyediakan fitur menandai tugas selesai, menghapus tugas, serta menyaring daftar berdasarkan status Semua, Aktif, dan Selesai.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## State Management
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Aplikasi menggunakan **Provider** dengan `ChangeNotifier` untuk mengelola data tugas secara terpusat. Provider dipilih karena mudah diterapkan pada aplikasi berskala kecil hingga menengah dan memungkinkan beberapa halaman membaca data yang sama tanpa meneruskan parameter secara berulang.
+
+`TugasModel` menyimpan daftar tugas dan menyediakan fungsi `tambah()`, `ubahStatus()`, serta `hapus()`. Setiap perubahan memanggil `notifyListeners()` agar widget yang menggunakan `context.watch()` dapat memperbarui tampilannya.
+
+Filter tugas dikelola menggunakan `setState()` karena hanya memengaruhi tampilan halaman daftar, sedangkan data tugas digunakan bersama oleh halaman daftar dan statistik.
+
+## Fitur Utama
+
+- Menambahkan tugas beserta mata kuliah dan deadline.
+- Menandai tugas sebagai selesai.
+- Menghapus tugas.
+- Filter Semua, Aktif, dan Selesai.
+- Statistik total, aktif, selesai, dan persentase penyelesaian.
+- Badge jumlah tugas aktif.
+- Navigasi menggunakan `go_router`.
+
+## Pengujian
+
+Unit test disiapkan untuk memeriksa penambahan tugas, perubahan status, penghapusan, dan perhitungan statistik. Pengujian dijalankan menggunakan perintah `flutter test`.
+
+## Penggunaan AI
+
+AI digunakan sebagai alat bantu pembelajaran, penyusunan contoh implementasi Flutter, serta pembuatan skenario pengujian. Kode tetap perlu diperiksa dan diuji melalui Flutter sebelum dikumpulkan.
+
+## Diagram Alur State Management
+
+```mermaid
+flowchart TD
+    A[Pengguna berinteraksi] --> B{Jenis tindakan}
+    B -->|Tambah tugas| C[TugasModel.tambah]
+    B -->|Ubah status| D[TugasModel.ubahStatus]
+    B -->|Hapus tugas| E[TugasModel.hapus]
+    C --> F[notifyListeners]
+    D --> F
+    E --> F
+    F --> G[Widget membaca state terbaru]
+    G --> H[Daftar, badge, dan statistik diperbarui]
+```
+
+### Penjelasan Alur
+
+Ketika pengguna menambahkan, menyelesaikan, atau menghapus tugas, aplikasi memanggil metode yang sesuai pada TugasModel. Setelah data berubah, notifyListeners() memberi tahu widget yang mendengarkan Provider. Widget kemudian membangun ulang bagian tampilan yang membutuhkan data terbaru, seperti daftar tugas, badge jumlah tugas aktif, dan statistik penyelesaian.
+  
